@@ -5,13 +5,14 @@ class Board:
     def __init__(self, height, width):
         self.height = height
         self.width = width
+        # La grilla ahora almacenará los símbolos específicos
         self.grid = [[' ' for _ in range(width)] for _ in range(height)]
 
     def draw(self, stdscr):
         """Dibuja el tablero y los bordes en la pantalla."""
         for y, row in enumerate(self.grid):
             for x, cell in enumerate(row):
-                # Usamos y+1, x+1 para dejar espacio para los bordes
+                # Dibuja el símbolo que está en la celda
                 stdscr.addstr(y + 1, x * 2 + 1, cell)
 
         # Dibuja los bordes del tablero
@@ -38,7 +39,7 @@ class Board:
         for x, y in piece.shape:
             abs_x, abs_y = piece.x + x, piece.y + y
             if 0 <= abs_y < self.height and 0 <= abs_x < self.width:
-                self.grid[abs_y][abs_x] = '■' # Usamos un bloque sólido para las piezas fijas
+                self.grid[abs_y][abs_x] = piece.symbol
 
     def clear_lines(self):
         """Verifica y limpia las líneas completas."""
