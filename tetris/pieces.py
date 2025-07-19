@@ -13,14 +13,16 @@ COLORS = {
 }
 
 # Definición de las formas de los tetrominós
-SHAPES = {
-    'I': [[(0, 0), (0, 1), (0, 2), (0, 3)]],
-    'O': [[(0, 0), (0, 1), (1, 0), (1, 1)]],
-    'T': [[(0, 0), (0, 1), (0, 2), (1, 1)]],
-    'S': [[(0, 1), (0, 2), (1, 0), (1, 1)]],
-    'Z': [[(0, 0), (0, 1), (1, 1), (1, 2)]],
-    'J': [[(0, 0), (1, 0), (1, 1), (1, 2)]],
-    'L': [[(0, 2), (1, 0), (1, 1), (1, 2)]],
+# La estructura ahora es un diccionario donde la clave es el nombre de la forma
+# y el valor es una tupla que contiene la forma y el símbolo.
+SHAPES_AND_SYMBOLS = {
+    'I': ([[(0, 0), (0, 1), (0, 2), (0, 3)]], 'I'),
+    'O': ([[(0, 0), (0, 1), (1, 0), (1, 1)]], 'O'),
+    'T': ([[(0, 0), (0, 1), (0, 2), (1, 1)]], 'T'),
+    'S': ([[(0, 0), (0, 1), (1, -1), (1, 0)]], 'S'),
+    'Z': ([[(0, -1), (0, 0), (1, 0), (1, 1)]], 'Z'),
+    'J': ([[(0, 0), (1, 0), (1, 1), (1, 2)]], 'J'),
+    'L': ([[(0, 2), (1, 0), (1, 1), (1, 2)]], 'L'),
 }
 
 class Tetromino:
@@ -28,16 +30,19 @@ class Tetromino:
         self.x = x
         self.y = y
         self.shape_name = shape_name
-        self.shape = SHAPES[shape_name][0] # Usamos la primera rotación por defecto
+        
+        # Obtenemos la forma y el símbolo del nuevo diccionario
+        shape_info = SHAPES_AND_SYMBOLS[shape_name]
+        self.shape = shape_info[0][0]
+        self.symbol = shape_info[1] # <--- NUEVO: Almacenamos el símbolo
+        
         self.color = COLORS[shape_name]
 
     def rotate(self):
-        # Lógica de rotación simple (no incluye "wall kicks")
-        # Se rota la pieza sobre su propio eje local
-        center = self.shape[1] # Usamos el segundo bloque como pivote
+        # La lógica de rotación no necesita cambios
+        center = self.shape[1]
         new_shape = []
         for x, y in self.shape:
-            # Transladar al origen, rotar y transladar de vuelta
             rel_x, rel_y = x - center[0], y - center[1]
             new_x, new_y = -rel_y + center[0], rel_x + center[1]
             new_shape.append((new_x, new_y))
