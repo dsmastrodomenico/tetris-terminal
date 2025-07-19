@@ -1,7 +1,7 @@
 # tetris/game.py
 import random
 from tetris.board import Board
-from tetris.pieces import Tetromino, SHAPES
+from tetris.pieces import Tetromino, SHAPES_AND_SYMBOLS
 
 class Game:
     def __init__(self, height, width):
@@ -14,7 +14,7 @@ class Game:
 
     def new_piece(self):
         """Crea una nueva pieza aleatoria."""
-        shape_name = random.choice(list(SHAPES.keys()))
+        shape_name = random.choice(list(SHAPES_AND_SYMBOLS.keys()))
         # Para la pieza siguiente, la posición no importa, pero la establecemos por consistencia
         return Tetromino(self.board.width // 2 - 1, 0, shape_name)
 
@@ -71,14 +71,14 @@ class Game:
         for x, y in piece.shape:
             abs_x, abs_y = piece.x + x, piece.y + y
             if 0 <= abs_y < self.board.height:
-                stdscr.addstr(abs_y + 1, (abs_x * 2) + 1, '■')
+                stdscr.addstr(abs_y + 1, (abs_x * 2) + 1, piece.symbol)
 
         # Dibuja la pieza siguiente
         stdscr.addstr(2, self.board.width * 2 + 5, "Next:")
         next_p = self.next_piece
         for x, y in next_p.shape:
             # Posicionamos la pieza siguiente en la esquina
-            stdscr.addstr(y + 4, (x * 2) + self.board.width * 2 + 5, '■')
+            stdscr.addstr(y + 4, (x * 2) + self.board.width * 2 + 5, next_p.symbol)
 
         # Dibuja la puntuación y el estado del juego
         stdscr.addstr(8, self.board.width * 2 + 5, f"Score: {self.score}")
